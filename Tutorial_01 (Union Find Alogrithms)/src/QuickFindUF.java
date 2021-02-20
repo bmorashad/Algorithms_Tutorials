@@ -2,82 +2,99 @@ import java.io.*;
 import java.util.Scanner;
 
 public class QuickFindUF {
+
+    // Variables
     private int[] id;
     private int count;
 
-    public QuickFindUF(int N) {
-        count = 0;
-        id = new int[N];
+    // Constructor
+    public QuickFindUF(int totalNumberOfNodes) {
+
+        count = totalNumberOfNodes;
+        id = new int[totalNumberOfNodes];
+
         for (int i = 0; i < id.length; i++) {
+            // Initializing the array (depends on the given totalNumberOfNodes)
+            // like this  eg:- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             id[i] = i;
         }
 
-        // we create an array with N elements from 0 to N
-        // Assuming N = 10
-        // eg:- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
 
+    // Method which returns the number of components or sets
     public int count() {
-        return ++count;
+        return count;
     }
 
+    // Returns the element of the set containing element (the parameter 'p' is an index of the array)
     public int find(int p) {
-        return 0;
-
+        return id[p];
     }
 
+    // Check whether p and q are in the same component (2 array accesses)
     public boolean connected(int p, int q) {
         return id[p] == id[q];
     }
 
     public void union(int p, int q) {
-        count();
 
-        int P = id[p];
-        int Q = id[q];
+        int pid = id[p];
+        int qid = id[q];
 
+        // p and q are already in the same component
+        if(pid == qid){
+            return;
+        }
+
+        // Change all entries with id[p] to id[q]
         for (int i = 0; i < id.length; i++) {
-            if(id[i] == P){
-                id[i] = Q;
+            if(id[i] == pid){
+                id[i] = qid;
             }
         }
+
+        // Once A union is formed we reduce the counter by 1
+        count --;
 
     }
 
     public static void main(String[] args) {
 
         Scanner input = null;
+        String inputFilePath = "D:\\IIT\\2nd Year\\Alogrithm\\Tutorials\\Tutorial_01 (Union Find Alogrithms)\\src\\tinyUF.txt";
+
         try {
-            input = new Scanner(new File("D:\\IIT\\2nd Year\\Alogrithm\\Tutorials\\Tutorial_01 (Union Find Alogrithms)\\src\\tinyUF.txt"));
+            input = new Scanner(new File(inputFilePath));
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        int N = input.nextInt();
+        int totalNumberOfNodes = input.nextInt();
 
-        System.out.println("Number of nodes is: " + N);
-        QuickFindUF uf = new QuickFindUF(N);
+        System.out.println("Number of nodes is: " + totalNumberOfNodes);
+        QuickFindUF quickFindUF = new QuickFindUF(totalNumberOfNodes);
 
-        // while (!StdIn.isEmpty()) {   <- ENABLE ONLY if reading from console or terminal
-        while (input.hasNextInt()) { // ONLY for IDE version, remove otherwise
+        while (input.hasNextInt()) {
 
-            // int p = StdIn.readInt(); <- ENABLE ONLY if reading from console or terminal
-            int p = input.nextInt(); // ONLY for IDE version, remove otherwise
+            int p = input.nextInt();
+            int q = input.nextInt();
 
-            // int q = StdIn.readInt(); <- ENABLE ONLY if reading from console or terminal
-            int q = input.nextInt(); // ONLY for IDE version, remove otherwise
+            if (quickFindUF.connected(p, q)) {
+                System.out.println(p + " and " + q + " are already connected!");
+                continue;
+            }
 
-            if (uf.connected(p, q)) continue;
-            uf.union(p, q);
-            System.out.println(p + " " + q);
+            quickFindUF.union(p, q);
+
+            System.out.println(p + " and " + q + " formed union!");
 
         }
 
-        System.out.println(uf.count + " components");
+        System.out.println(quickFindUF.count() + " components");
     }
 
 }
 
 
-
+// https://algs4.cs.princeton.edu/15uf/QuickFindUF.java.html
