@@ -26,7 +26,7 @@ public class QuickFindUF {
         return count;
     }
 
-    // Returns the element of the set containing element (the parameter 'p' is an index of the array)
+    // Returns the element of the set containing element
     public int find(int p) {
         return id[p];
     }

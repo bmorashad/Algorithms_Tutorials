@@ -3,39 +3,58 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class QuickUnionUF {
+    // Variables
     private int[] id;
     private int count;
 
-    public QuickUnionUF(int N) {
-        count = 0;
-        id = new int[N];
+    // Constructor
+    public QuickUnionUF(int totalNumberOfNodes) {
+
+        count = totalNumberOfNodes;
+        id = new int[totalNumberOfNodes];
+
         for (int i = 0; i < id.length; i++) {
+            // Initializing the array (depends on the given totalNumberOfNodes)
+            // like this  eg:- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             id[i] = i;
         }
 
-        // we create an array with N elements from 0 to N
-        // Assuming N = 10
-        // eg:- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
 
+    // Method which returns the number of components or sets
+    public int count() {
+        return count;
+    }
+
+    // Returns the element of the set containing element
     // chase parent pointer until reach root (depth of i array accesses)
-    public  int root(int i){
-        while (i != id[i]){
-            i = id[i];
+    public int find(int p) {
+        while (p != id[p]) {
+            // This is how u get the root when the index is equal to the value of at the index means that it is a root
+            p = id[p];
         }
-        return i;
+        return p;
     }
 
-    // check if p and q have same root (depth of p and q array accesses)
+    // Check whether p and q are in the same component (2 array accesses)
     public boolean connected(int p, int q) {
-        return root(p) == root(q);
+        return find(p) == find(q);
     }
 
     // change root of p to point to root of q (depth of p and q array accesses)
     public void union(int p, int q) {
-        int i = root(p);
-        int j = root(q);
-        id[i] = j;
+
+        // getting the roots of the element
+        int rootP = find(p);
+        int rootQ = find(q);
+
+        // Since same root
+        if(rootP == rootQ){
+            return;
+        }
+
+        // Changing the root
+        id[rootP] = rootQ;
 
     }
 
@@ -43,32 +62,39 @@ public class QuickUnionUF {
     public static void main(String[] args) {
 
         Scanner input = null;
+        String inputFilePath = "D:\\IIT\\2nd Year\\Alogrithm\\Tutorials\\Tutorial_01 (Union Find Alogrithms)\\src\\tinyUF.txt";
+
         try {
-            input = new Scanner(new File("D:\\IIT\\2nd Year\\Alogrithm\\Tutorials\\Tutorial_01 (Union Find Alogrithms)\\src\\tinyUF.txt"));
+            input = new Scanner(new File(inputFilePath));
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        int N = input.nextInt();
+        int totalNumberOfNodes = input.nextInt();
 
-        System.out.println("Number of nodes is: " + N);
-        QuickUnionUF uf = new QuickUnionUF(N);
+        System.out.println("Number of nodes is: " + totalNumberOfNodes);
+        QuickUnionUF quickUnionUF = new QuickUnionUF(totalNumberOfNodes);
 
-        // while (!StdIn.isEmpty()) {   <- ENABLE ONLY if reading from console or terminal
-        while (input.hasNextInt()) { // ONLY for IDE version, remove otherwise
+        while (input.hasNextInt()) {
 
-            // int p = StdIn.readInt(); <- ENABLE ONLY if reading from console or terminal
-            int p = input.nextInt(); // ONLY for IDE version, remove otherwise
+            int p = input.nextInt();
+            int q = input.nextInt();
 
-            // int q = StdIn.readInt(); <- ENABLE ONLY if reading from console or terminal
-            int q = input.nextInt(); // ONLY for IDE version, remove otherwise
+            if (quickUnionUF.connected(p, q)) {
+                System.out.println(p + " and " + q + " are already connected!");
+                continue;
+            }
 
-            if (uf.connected(p, q)) continue;
-            uf.union(p, q);
-            System.out.println(p + " " + q);
+            quickUnionUF.union(p, q);
+
+            System.out.println(p + " and " + q + " formed union!");
 
         }
 
+        System.out.println(quickUnionUF.count() + " components");
     }
+
 }
+
+// https://algs4.cs.princeton.edu/15uf/QuickUnionUF.java.html
