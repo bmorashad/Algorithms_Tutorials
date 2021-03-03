@@ -44,3 +44,8 @@ public class Question01 {
 // Design a binary search based algorithm to find the largest number in an array of N integers, a[0], a[1], a[N-1].
 // To get the largest number from an array using binary search, we need to perform continuous left mid operation until
 // we reach the last element.
+
+// Time Complexity
+// Best Case: O(1)
+// Avg Case: O(log n)
+// Worst Case: O(log n)
